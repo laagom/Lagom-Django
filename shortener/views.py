@@ -12,7 +12,7 @@ def index_view(request):
     # 에러가 발생하기 때문에 반드시 한 개만 존재하는 경우에 사용한다.
     # valudation용으로 많이 사용한다.
     # user = Users.objects.filter(username='admin').first()
-    user = Users.objects.get(username='admin1')
+    user = Users.objects.get(username='admin')
     email = user.email if user else "Anonymous User!"
 
     print(email)
