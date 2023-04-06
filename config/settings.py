@@ -42,6 +42,9 @@ INSTALLED_APPS = [
 
     # CUSTOM APP
     "shortener",
+
+    # DJANGO_DEBUG_TOOLBAR
+    "debug_toolbar"
 ]
 
 AUTH_USER_MODEL = 'shortener.Users'
@@ -54,6 +57,12 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",  # DJANGO_DEBUG_TOOLBAR
+]
+
+# DJANGO_DEBUG_TOOLBAR
+INTERNAL_IPS = [
+    "127.0.0.1",
 ]
 
 ROOT_URLCONF = "config.urls"

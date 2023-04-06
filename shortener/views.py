@@ -29,7 +29,7 @@ def redirect_view(request):
     return redirect("index")
 
 
-# @csrf_exempt  # csrf예외 처리 : JWT 토큰 발생 시 csrf 토큰이 필요 없다. 
+@csrf_exempt  # csrf예외 처리 : JWT 토큰 발생 시 csrf 토큰이 필요 없다. 
 def get_user(request, user_id):
     '''
     HTTP method GET, POST를 사용하여 사용자 정보 조회
