@@ -34,8 +34,6 @@ def get_user(request, user_id):
     '''
     HTTP method GET, POST를 사용하여 사용자 정보 조회
     '''
-    print(user_id)
-
     if request.method == 'GET':
         abc = request.GET.get("abc")
         xyz = request.GET.get("xyz")
