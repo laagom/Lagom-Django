@@ -4,8 +4,6 @@ from django.views.decorators.csrf import csrf_exempt
 
 from shortener.models import Users
 
-
-
 # Create your views here.
 
 def index_view(request):
