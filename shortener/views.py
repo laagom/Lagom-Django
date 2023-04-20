@@ -11,10 +11,14 @@ def index_view(request):
     URL 요청을 통한, 화면이동 예시
     '''
     print("진입 index_view")
+    print(request.user.pay_plan.name)
 
     user = Users.objects.filter(username='admin').first()
     email = user.email if user else "Anonymous User!"
-    
+    print("Logged in?", request.user.is_authenticated)
+    if request.user.is_authenticated is False:
+        email = "Anonymous User!"
+    print(email)
     return render(request, "index.html", {"welcome_msg" : f"Hello {email}!", "hello" : "World"})
 
 

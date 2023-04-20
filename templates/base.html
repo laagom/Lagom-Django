@@ -9,8 +9,8 @@
 <body>
     {{ user }} <br>
     {{ user.email }}<br>
-    {% for i in params %}
-        {{ i }}<br>
+    {% for param in params %}
+        {{ param }}<br>
     {% endfor %}
     {% if user.email == "admin@shortener.com" %}
         <h1>{{ user }}는 할 수 있다.</h1>
