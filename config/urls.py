@@ -5,7 +5,7 @@ import debug_toolbar
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("shortener/", include('shortener.urls')),
+    path("", include('shortener.urls')),
 
     # Debug
     path("__debug__/", include(debug_toolbar.urls))
