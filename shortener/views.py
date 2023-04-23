@@ -3,6 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 
 from shortener.models import PayPlan, Users
@@ -93,11 +94,23 @@ def logout_view(request):
     logout(request)
     return redirect("login")
 
-
-def list_view(request):
+# @login_required
+def payplan_list_view(request):
     page = int(request.GET.get("page", 1))
     pay_plans = PayPlan.objects.all().order_by("-id")
-    pageinator = Paginator(pay_plans, 1)
+    pageinator = Paginator(pay_plans, 5)
     pay_plans = pageinator.get_page(page)
 
-    return render(request, "boards.html", {"pay_plans": pay_plans})
+    return render(request, "payplan/boards.html", {"pay_plans": pay_plans})
+
+# @login_required
+def user_list_view(request):
+    page = int(request.GET.get("page", 1))
+    users = Users.objects.all().order_by("-id")
+    print(users)
+    for user in users:
+        print(user.pay_plan.price)
+    pageinator = Paginator(users, 5)
+    users = pageinator.get_page(page)
+
+    return render(request, "user/boards.html", {"users": users})

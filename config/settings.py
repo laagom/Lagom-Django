@@ -44,7 +44,9 @@ INSTALLED_APPS = [
     "shortener",
 
     # DJANGO_DEBUG_TOOLBAR
-    "debug_toolbar"
+    "debug_toolbar",
+    # DJANGO_SEED
+    "django_seed"
 ]
 
 AUTH_USER_MODEL = 'shortener.Users'
