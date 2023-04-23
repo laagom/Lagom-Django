@@ -49,6 +49,9 @@ INSTALLED_APPS = [
     "django_seed"
 ]
 
+# FOR LOGIN_REQUIRED
+LOGIN_URL = "/login"
+
 AUTH_USER_MODEL = 'shortener.Users'
 
 MIDDLEWARE = [

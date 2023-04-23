@@ -11,6 +11,7 @@ from shortener.register.form import RegisterForm
 
 # Create your views here.
 
+@login_required
 def index_view(request):
     ''' 
     URL 요청을 통한, Index 화면이동 예시
@@ -22,7 +23,7 @@ def index_view(request):
     if request.user.is_authenticated is False:
         email = "Anonymous User"
 
-    return render(request, "index.html", {"user" : f" {email}"})
+    return render(request, "index.html", {"user" : user})
 
 
 def redirect_view(request):
@@ -73,7 +74,7 @@ def register_view(request):
 def login_view(request):
     if request.method == "POST":
         form = AuthenticationForm(request, request.POST)
-        mas = "가입되어 있지 않거나 로그인 정보가 잘못 되었습니다."
+        msg = "가입되어 있지 않거나 로그인 정보가 잘못 되었습니다."
         print(form.is_valid())
         template = "login.html"
         if form.is_valid():
@@ -94,7 +95,7 @@ def logout_view(request):
     logout(request)
     return redirect("login")
 
-# @login_required
+@login_required
 def payplan_list_view(request):
     page = int(request.GET.get("page", 1))
     pay_plans = PayPlan.objects.all().order_by("-id")
@@ -103,13 +104,10 @@ def payplan_list_view(request):
 
     return render(request, "payplan/boards.html", {"pay_plans": pay_plans})
 
-# @login_required
+@login_required
 def user_list_view(request):
     page = int(request.GET.get("page", 1))
     users = Users.objects.all().order_by("-id")
-    print(users)
-    for user in users:
-        print(user.pay_plan.price)
     pageinator = Paginator(users, 5)
     users = pageinator.get_page(page)
 
