@@ -1,7 +1,8 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import AuthenticationForm
 
 from shortener.models import Users
 from shortener.register.form import RegisterForm
@@ -49,7 +50,7 @@ def get_user(request, user_id):
         return JsonResponse(status=201,data=dict(msg="You just reached with Post Method!"), safe=False)
     
 
-def register(request):
+def register_view(request):
     if request.method == "POST":
         form = RegisterForm(request.POST)
         msg = "올바르지 않은 데이터 입니다."
@@ -66,3 +67,25 @@ def register(request):
         form = RegisterForm()
         return render(request, "register.html", {"form" : form})
         
+
+def login_view(request):
+    if request.method == "POST":
+        form = AuthenticationForm(request, request.POST)
+        mas = "가입되어 있지 않거나 로그인 정보가 잘못 되었습니다."
+        print(form.is_valid())
+        if form.is_valid():
+            username = form.cleaned_data.get("username")
+            raw_password = form.cleaned_data.get("password")
+            user = authenticate(username = username, password = raw_password)
+            if user is not None:
+                msg = "로그인 성공!!"
+                login(request, user)
+        return render(request, "login.html", {"form": form, "msg": msg})
+    else:
+        form = AuthenticationForm()
+        return render(request, "login.html", {"form": form})
+
+
+def logout_view(request):
+    logout(request)
+    return redirect("index")
