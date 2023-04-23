@@ -1,10 +1,11 @@
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import authenticate, login, logout
+from django.core.paginator import Paginator
 
-from shortener.models import Users
+from shortener.models import PayPlan, Users
 from shortener.register.form import RegisterForm
 
 # Create your views here.
@@ -91,3 +92,12 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect("login")
+
+
+def list_view(request):
+    page = int(request.GET.get("page", 1))
+    pay_plans = PayPlan.objects.all().order_by("-id")
+    pageinator = Paginator(pay_plans, 1)
+    pay_plans = pageinator.get_page(page)
+
+    return render(request, "boards.html", {"pay_plans": pay_plans})

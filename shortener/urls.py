@@ -15,4 +15,8 @@ urlpatterns = [
     # LOGIN, LOGOUT
     path('login', login_view, name='login'),
     path('logout', logout_view, name='logout'),
+
+    # LIST
+    path('list', list_view, name='list'),
+
 ]
