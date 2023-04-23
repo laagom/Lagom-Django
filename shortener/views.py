@@ -14,13 +14,13 @@ def index_view(request):
     URL 요청을 통한, Index 화면이동 예시
     '''
     user = Users.objects.filter(username=request.user).first()
-    email = user.email if user else "Anonymous User!"
+    email = user.email if user else "Anonymous User"
 
     print("Logged in?", request.user.is_authenticated)
     if request.user.is_authenticated is False:
-        email = "Anonymous User!"
+        email = "Anonymous User"
 
-    return render(request, "index.html", {"user" : f" {email}!"})
+    return render(request, "index.html", {"user" : f" {email}"})
 
 
 def redirect_view(request):
@@ -73,6 +73,7 @@ def login_view(request):
         form = AuthenticationForm(request, request.POST)
         mas = "가입되어 있지 않거나 로그인 정보가 잘못 되었습니다."
         print(form.is_valid())
+        template = "login.html"
         if form.is_valid():
             username = form.cleaned_data.get("username")
             raw_password = form.cleaned_data.get("password")
@@ -80,7 +81,8 @@ def login_view(request):
             if user is not None:
                 msg = "로그인 성공!!"
                 login(request, user)
-        return render(request, "login.html", {"form": form, "msg": msg})
+                template = "index.html"
+        return render(request, template, {"form": form, "msg": msg})
     else:
         form = AuthenticationForm()
         return render(request, "login.html", {"form": form})
@@ -88,4 +90,4 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return redirect("index")
+    return redirect("login")
