@@ -1,6 +1,9 @@
 from django.urls import path
 
-from shortener.views import get_user, index_view, login_view, logout_view, redirect_view, register_view
+from shortener.views import (
+    redirect_view, get_user, index_view, payplan_list_view, user_list_view,
+    login_view, logout_view, register_view
+    )
 
 urlpatterns = [
     path('redirect/', redirect_view),
@@ -15,4 +18,8 @@ urlpatterns = [
     # LOGIN, LOGOUT
     path('login', login_view, name='login'),
     path('logout', logout_view, name='logout'),
+
+    # LIST
+    path('payplan/list', payplan_list_view, name='playplan_list'),
+    path('user/list', user_list_view, name='user_list'),
 ]

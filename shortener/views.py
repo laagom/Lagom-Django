@@ -1,14 +1,17 @@
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
-from shortener.models import Users
+from shortener.models import PayPlan, Users
 from shortener.register.form import RegisterForm
 
 # Create your views here.
 
+@login_required
 def index_view(request):
     ''' 
     URL 요청을 통한, Index 화면이동 예시
@@ -20,7 +23,7 @@ def index_view(request):
     if request.user.is_authenticated is False:
         email = "Anonymous User"
 
-    return render(request, "index.html", {"user" : f" {email}"})
+    return render(request, "index.html", {"user" : user})
 
 
 def redirect_view(request):
@@ -71,7 +74,7 @@ def register_view(request):
 def login_view(request):
     if request.method == "POST":
         form = AuthenticationForm(request, request.POST)
-        mas = "가입되어 있지 않거나 로그인 정보가 잘못 되었습니다."
+        msg = "가입되어 있지 않거나 로그인 정보가 잘못 되었습니다."
         print(form.is_valid())
         template = "login.html"
         if form.is_valid():
@@ -91,3 +94,21 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect("login")
+
+@login_required
+def payplan_list_view(request):
+    page = int(request.GET.get("page", 1))
+    pay_plans = PayPlan.objects.all().order_by("-id")
+    paginator = Paginator(pay_plans, 5, orphans=1)
+    pay_plans = paginator.get_page(page)
+
+    return render(request, "payplan/boards.html", {"pay_plans": pay_plans})
+
+@login_required
+def user_list_view(request):
+    page = int(request.GET.get("page", 1))
+    users = Users.objects.all().order_by("-id")
+    paginator = Paginator(users, 5)
+    users = paginator.get_page(page)
+
+    return render(request, "user/boards.html", {"users": users})

@@ -11,6 +11,8 @@
     <h3>{{ user }}</h3>
     {% if user.is_authenticated %}
         <a href="logout">로그아웃</a>
+        <a href="user/list">유저목록</a>
+        <a href="payplan/list">PayPlan목록</a>
     {% else %}
         <a href="register">회원가입</a>
         <a href="login">로그인</a>
