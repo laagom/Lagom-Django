@@ -99,8 +99,8 @@ def logout_view(request):
 def payplan_list_view(request):
     page = int(request.GET.get("page", 1))
     pay_plans = PayPlan.objects.all().order_by("-id")
-    pageinator = Paginator(pay_plans, 5)
-    pay_plans = pageinator.get_page(page)
+    paginator = Paginator(pay_plans, 5, orphans=1)
+    pay_plans = paginator.get_page(page)
 
     return render(request, "payplan/boards.html", {"pay_plans": pay_plans})
 
@@ -108,7 +108,7 @@ def payplan_list_view(request):
 def user_list_view(request):
     page = int(request.GET.get("page", 1))
     users = Users.objects.all().order_by("-id")
-    pageinator = Paginator(users, 5)
-    users = pageinator.get_page(page)
+    paginator = Paginator(users, 5)
+    users = paginator.get_page(page)
 
     return render(request, "user/boards.html", {"users": users})
