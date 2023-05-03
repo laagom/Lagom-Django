@@ -71,6 +71,7 @@ def register_view(request):
         return render(request, "register.html", {"form" : form})
         
 
+@login_required
 def login_view(request):
     if request.method == "POST":
         form = AuthenticationForm(request, request.POST)
