@@ -71,7 +71,6 @@ def register_view(request):
         return render(request, "register.html", {"form" : form})
         
 
-@login_required
 def login_view(request):
     if request.method == "POST":
         form = AuthenticationForm(request, request.POST)
@@ -100,7 +99,7 @@ def logout_view(request):
 def payplan_list_view(request):
     page = int(request.GET.get("page", 1))
     pay_plans = PayPlan.objects.all().order_by("-id")
-    paginator = Paginator(pay_plans, 5, orphans=1)
+    paginator = Paginator(pay_plans, 10, orphans=9)
     pay_plans = paginator.get_page(page)
 
     return render(request, "payplan/boards.html", {"pay_plans": pay_plans})
@@ -109,7 +108,7 @@ def payplan_list_view(request):
 def user_list_view(request):
     page = int(request.GET.get("page", 1))
     users = Users.objects.all().order_by("-id")
-    paginator = Paginator(users, 5)
+    paginator = Paginator(users, 10)
     users = paginator.get_page(page)
 
     return render(request, "user/boards.html", {"users": users})
