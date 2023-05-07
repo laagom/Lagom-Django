@@ -1,4 +1,5 @@
 {% extends "index.html" %}
+{% load custom_tags %}
 {% block content %}
     <h2>유저 리스트</h2>
     <h4>{% if msg %}{{msg}}{% endif %}</h4>
@@ -19,10 +20,10 @@
                 <tr class={% cycle "" "table-dark" %}>
                     <td>{{ user.id }}</td>
                     <td>{{ user.username }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.date_joined }}</td>
+                    <td>{{ user.email|email_ma:user.id }}</td>
+                    <td>{{ user.date_joined|date:"Y M d D" }}</td>
                     <td>{{ user.pay_plan.name }}</td>
-                    <td>{{ user.pay_plan.price }}</td>
+                    <td>{{ user.pay_plan.price|price_comma }}</td>
                 </tr>
             {% endfor%}
             {% if users|length == 0 %} 조회할 데이터가 없습니다. {% endif %}
