@@ -46,7 +46,9 @@ INSTALLED_APPS = [
     # DJANGO_DEBUG_TOOLBAR
     "debug_toolbar",
     # DJANGO_SEED
-    "django_seed"
+    "django_seed",
+    # DJANGO_FAKER
+    # "django_faker",
 ]
 
 # FOR LOGIN_REQUIRED
