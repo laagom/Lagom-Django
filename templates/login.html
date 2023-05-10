@@ -87,7 +87,7 @@
                     {% endif %}
                     {% if is_ok or user.is_authenticated %}
                     <p class="text-center text-sm text-success">로그인 성공({{ user.username }}) <a class="text-primary" href="{% url 'logout' %}">로그아웃</a></p>
-                    {% endif %}
+                    {% else %}
                     <form method="post">
                     {% csrf_token %}
                     <div class="form-group mb-3">
@@ -95,7 +95,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="ni ni-user-run"></i></span>
                         </div>
-                        {{ form.email }}
+                        {{ form.username }}
                         </div>
                     </div>
                     <div class="form-group">
@@ -116,6 +116,7 @@
                         <button type="submit" class="btn btn-primary my-4">로그인</button>
                     </div>
                     </form>
+                    {% endif %}
                 </div>
                 </div>
                 <div class="row mt-3">
