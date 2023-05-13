@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 
 from shortener.models import PayPlan, Users
-from shortener.register.form import RegisterForm
+from shortener.forms.form import LoginForm, RegisterForm
 
 # Create your views here.
 
@@ -72,28 +72,33 @@ def register_view(request):
         
 
 def login_view(request):
-    msg = None
     is_ok = False
     if request.method == "POST":
-        form = AuthenticationForm(request, request.POST)
+        form = LoginForm(request.POST)
         template = "login.html"
         if form.is_valid():
-            username = form.cleaned_data.get("username")
+            email = form.cleaned_data.get("email")
             raw_password = form.cleaned_data.get("password")
-            user = authenticate(username=username, password=raw_password)
-            if user is not None:
-                login(request, user)
-                template = "index.html"
-                is_ok = True
-        else:
+            remember_me = form.cleaned_data.get("remember_me")
             msg = "올바른 유저ID와 패스워드를 입력하세요."
-
+            try:
+                user = Users.objects.get(email=email)
+            except Users.DoesNotExist:
+                pass
+            else:
+                if user.check_password(raw_password):
+                    msg = None
+                    login(request, user)
+                    is_ok = True
+                    request.session["remember_me"] = remember_me
+                    
+                    # 브라우저가 닫혔을 때, 세션 만료 시간 설정(edge에서 테스트 진행)
+                    if not remember_me:
+                        request.session.set_expirey(1)
     else:
-        form = AuthenticationForm()
-    
-    for visible in form.visible_fields():
-        visible.field.widget.attrs["placeholder"] = "유저ID" if visible.name == "username" else "패스워드"
-        visible.field.widget.attrs["class"] = "form-control"
+        msg = None
+        form = LoginForm()
+    print("REMEMBER_ME: ", request.session.get("remember_me"))
     return render(request, "login.html", {"form": form, "msg": msg, "is_ok": is_ok})
 
 
