@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import json
 import os
 from pathlib import Path
+from datetime import datetime
 from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -47,25 +48,24 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
-INSTALLED_APPS = [
+DJANGO_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
-    # CUSTOM APP
-    "shortener",
-
-    # DJANGO_DEBUG_TOOLBAR
-    "debug_toolbar",
-    # DJANGO_SEED
-    "django_seed",
-    # DJANGO_FAKER
-    # "django_faker",
 ]
+PROJECT_APPS = [
+    "shortener",
+]
+THIRD_PARTY_APPS = [
+    "debug_toolbar",
+    "django_seed",
+    "django_crontab",
+]
+
+INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
 
 # FOR LOGIN_REQUIRED
 LOGIN_URL = "/login"
@@ -81,6 +81,15 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",  # DJANGO_DEBUG_TOOLBAR
+]
+
+# SESSION
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True 
+ACCOUNT_SESSION_REMEMBER = True
+SESSION_COOKIE_AGE = 300
+
+CRONJOBS = [
+    ('*/1 * * * *', 'core.cron.delete_sessions', '>> '+ os.path.join(BASE_DIR, f'core/log/cron_{datetime.now().strftime("%Y-%m-%d")}.log')),
 ]
 
 # DJANGO_DEBUG_TOOLBAR
@@ -145,11 +154,11 @@ AUTH_PASSWORD_VALIDATORS = [
 # LANGUAGE_CODE = "en-us"
 LANGUAGE_CODE = "ko-kr"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Seoul"
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)

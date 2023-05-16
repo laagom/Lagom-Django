@@ -75,7 +75,6 @@ def login_view(request):
     is_ok = False
     if request.method == "POST":
         form = LoginForm(request.POST)
-        template = "login.html"
         if form.is_valid():
             email = form.cleaned_data.get("email")
             raw_password = form.cleaned_data.get("password")
@@ -92,9 +91,9 @@ def login_view(request):
                     is_ok = True
                     request.session["remember_me"] = remember_me
                     
-                    # 브라우저가 닫혔을 때, 세션 만료 시간 설정(edge에서 테스트 진행)
-                    if not remember_me:
-                        request.session.set_expirey(1)
+                    # # 브라우저가 닫혔을 때, 세션 만료 시간 설정(edge에서 테스트 진행)
+                    # if not remember_me:
+                    #     request.session.set_expirey(1)
     else:
         msg = None
         form = LoginForm()
