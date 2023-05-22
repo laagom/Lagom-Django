@@ -19,24 +19,26 @@ from django.core.exceptions import ImproperlyConfigured
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-TEMPLATES_DIR = [os.path.join(BASE_DIR, 'templates')]
+TEMPLATES_DIR = [os.path.join(BASE_DIR, "templates")]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECRETS
 SECRET_DIR = BASE_DIR / ".secrets"
-secret_file = os.path.join(SECRET_DIR, 'secret.json')
+secret_file = os.path.join(SECRET_DIR, "secret.json")
 
-with open(secret_file) as f: 
+with open(secret_file) as f:
     secrets = json.loads(f.read())
+
 
 def get_secret(setting, secrets=secrets):
     try:
         return secrets[setting]
-    except KeyError: 
+    except KeyError:
         error_msg = f"Set the {setting} environment variable"
         raise ImproperlyConfigured(error_msg)
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = get_secret("DJANGO_SECRET_KEY")
@@ -70,7 +72,7 @@ INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
 # FOR LOGIN_REQUIRED
 LOGIN_URL = "/login"
 
-AUTH_USER_MODEL = 'shortener.Users'
+AUTH_USER_MODEL = "shortener.Users"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -84,12 +86,20 @@ MIDDLEWARE = [
 ]
 
 # SESSION
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True 
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 ACCOUNT_SESSION_REMEMBER = True
 SESSION_COOKIE_AGE = 300
 
 CRONJOBS = [
-    ('*/1 * * * *', 'core.cron.delete_sessions', '>> '+ os.path.join(BASE_DIR, f'core/log/cron_{datetime.now().strftime("%Y-%m-%d")}.log')),
+    (
+        "*/1 * * * *",
+        "core.cron.delete_sessions",
+        ">> "
+        + os.path.join(
+            BASE_DIR, f'core/log/cron_{datetime.now().strftime("%Y-%m-%d")}.log'
+        ),
+    ),
+    # ('*/1 * * * *', 'core.cron.merge_sessionlog', '>> '+ os.path.join(BASE_DIR, f'core/mergeLog/cron.log')),
 ]
 
 # DJANGO_DEBUG_TOOLBAR

@@ -11,11 +11,11 @@ from shortener.forms.form import LoginForm, RegisterForm
 
 # Create your views here.
 
-@login_required
+
 def index_view(request):
-    ''' 
+    """
     URL 요청을 통한, Index 화면이동 예시
-    '''
+    """
     user = Users.objects.filter(username=request.user).first()
     email = user.email if user else "Anonymous User"
 
@@ -23,35 +23,44 @@ def index_view(request):
     if request.user.is_authenticated is False:
         email = "Anonymous User"
 
-    return render(request, "index.html", {"user" : user})
+    return render(request, "index.html", {"welcome_msg": "Hello FastCampus!"})
+
+
+def url_list(request):
+    return render(
+        request,
+        "url_list.html",
+    )
 
 
 def redirect_view(request):
-    '''
+    """
     화면 이동 시, render와 redirect의 차이 예시
-    '''
+    """
     print("진입 redirect_view")
-    
+
     return redirect("index")
 
 
-@csrf_exempt  # csrf예외 처리 : JWT 토큰 발생 시 csrf 토큰이 필요 없다. 
+@csrf_exempt  # csrf예외 처리 : JWT 토큰 발생 시 csrf 토큰이 필요 없다.
 def get_user(request, user_id):
-    '''
+    """
     HTTP method GET, POST를 사용하여 사용자 정보 조회
-    '''
-    if request.method == 'GET':
+    """
+    if request.method == "GET":
         abc = request.GET.get("abc")
         xyz = request.GET.get("xyz")
         user = Users.objects.filter(pk=user_id).first()
-        return render(request, "base.html", {"user" : user,  "params" : [abc, xyz]})
-    elif request.method == 'POST':
+        return render(request, "base.html", {"user": user, "params": [abc, xyz]})
+    elif request.method == "POST":
         username = request.GET.get("username")
         if username:
             user = Users.objects.filter(pk=user_id).update(username=username)
 
-        return JsonResponse(status=201,data=dict(msg="You just reached with Post Method!"), safe=False)
-    
+        return JsonResponse(
+            status=201, data=dict(msg="You just reached with Post Method!"), safe=False
+        )
+
 
 def register_view(request):
     if request.method == "POST":
@@ -65,11 +74,11 @@ def register_view(request):
             user = authenticate(username=username, password=raw_password)
             login(request, user)
             msg = "회원가입완료"
-        return render(request, "register.html", {"form" : form, "mag" : msg})
+        return render(request, "register.html", {"form": form, "mag": msg})
     else:
         form = RegisterForm()
-        return render(request, "register.html", {"form" : form})
-        
+        return render(request, "register.html", {"form": form})
+
 
 def login_view(request):
     is_ok = False
@@ -90,7 +99,7 @@ def login_view(request):
                     login(request, user)
                     is_ok = True
                     request.session["remember_me"] = remember_me
-                    
+
                     # # 브라우저가 닫혔을 때, 세션 만료 시간 설정(edge에서 테스트 진행)
                     # if not remember_me:
                     #     request.session.set_expirey(1)
@@ -105,6 +114,7 @@ def logout_view(request):
     logout(request)
     return redirect("login")
 
+
 @login_required
 def payplan_list_view(request):
     page = int(request.GET.get("page", 1))
@@ -113,6 +123,7 @@ def payplan_list_view(request):
     pay_plans = paginator.get_page(page)
 
     return render(request, "payplan/boards.html", {"pay_plans": pay_plans})
+
 
 @login_required
 def user_list_view(request):
